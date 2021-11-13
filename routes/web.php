@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\NotebookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +22,9 @@ Route::get('/', function () {
 });
 
 Route::resource('products', ProductController::class);
+Route::resource('notebook', NotebookController::class);
+//Route::post('/page/create', [PageController::class, 'getSpecification']);
+//Route::resource('page', PageController::class);
+Route::resource('project', ProjectController::class);
 
 

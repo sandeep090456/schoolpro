@@ -32,8 +32,8 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for=""><strong>Class:</strong></label>
-                                    <select class="form-control @error('standard') is invalid @enderror" name="class">
-                                      <option value="">Select class</option>
+                                    <select class="form-control @error('standard') is invalid @enderror" name="class" id="class_option">
+                                      <option value="0">Select class</option>
                                       @foreach(App\Models\Standard::all() as $std)
                                           <option value="{{$std->name}}" selected="selected">{{$std->name}}</option>
                                       @endforeach
@@ -85,5 +85,17 @@
              </div>
          </div>
          </div>
-        </div>   
+        </div>  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type='text/javascript'>
+        $('#class_option').on('change',function(e){
+        // console.log(e);  
+        var class_id = e.target.value; 
+        console.log(class_id);
+        $.get( BASEURL + '/sub_id=' + class_id, function(data){
+            console.log(data);
+
+                });
+                }); 
+                </script> 
 @endsection
