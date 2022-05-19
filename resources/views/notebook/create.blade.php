@@ -17,7 +17,7 @@
       <div class="card">
         <div class="card-header">
           <h5>Add Details
-              <a href="{{ route('notebook.index') }}" class="btn btn-danger float-right" style="">Back</a>
+              <a href="{{ route('notebook.index') }}" class="btn btn-danger float-right">Back</a>
             </h5>
         </div>
         <div class="card-body">

@@ -5,6 +5,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\NotebookController;
+use App\Models\Product;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,5 +26,16 @@ Route::get('/', function () {
 Route::resource('products', ProductController::class);
 Route::resource('notebook', NotebookController::class);
 Route::resource('project', ProjectController::class);
+Route::get('/books_list',[ProductController::class,'books_list']);
+Route::get('/products_list',[ProductController::class,'products_list']);
+// {
+
+//      return Product::where('school_id', $request->school_id)->get();
+// });
+// Route::get('/products_list',function (Request $request)
+// {
+
+//     return Product::where('school_id', $request->school_id)->where('class_id', $request->class_id)->get();
+// });
 
 

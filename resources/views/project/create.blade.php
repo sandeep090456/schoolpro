@@ -17,7 +17,7 @@
       <div class="card">
         <div class="card-header">
           <h5>Add Details
-              <a href="{{ route('project.index') }}" class="btn btn-danger float-right" style="">Back</a>
+              <a href="{{ route('project.index') }}" class="btn btn-danger float-right">Back</a>
             </h5>
         </div>
         <div class="card-body">
@@ -42,7 +42,7 @@
             <div class="form-group">
                 <label for="">Specification:</label>
                 <select class="form-control @error('specification_id') is invalid @enderror" name="specification_id">
-                  <option value="">Select specification</option>
+                  <option value="" disabled>Select specification</option>
                     @foreach(App\Models\Specification::all() as $specification)
                   <option value="{{$specification->id}}">{{$specification->spec_name}}</option>
                     @endforeach

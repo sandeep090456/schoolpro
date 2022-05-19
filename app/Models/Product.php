@@ -9,12 +9,12 @@ class Product extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'school_name',
-        'class',
+        'school_id',
+        'class_id',
+        'stream',
         'subject',
         'book_name',
         'publisher',
-        'book_image',
         'hsn',
         'gst',
         'price',

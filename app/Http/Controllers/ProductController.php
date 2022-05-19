@@ -6,7 +6,7 @@ use App\Models\Subject;
 use App\Models\Standard;
 use App\Models\Product;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     /**
@@ -14,11 +14,20 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(5);
-        return view('products.index',compact('products'))
-        ->with('i',(request()->input('page', 1) - 1) * 5);
+
+
+
+        $products = DB::table('products')
+         ->join('schools','products.school_id','=','schools.id')
+         ->join('standards','products.class_id','=','standards.id')
+         ->select('products.id','schools.name','standards.name','products.stream','products.subject','products.book_name','products.publisher','products.hsn','products.gst','products.price',)
+         ->get();
+        // $product = Product::all();
+         return view('products.index',compact('products'))
+         ->with('i',(request()->input('product',1) - 1)* 5);
+         
     }
 
 
@@ -45,30 +54,31 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'school_name'=>'required',
-            'class'=>'required',
+            'school_id'=>'required',
+            'class_id'=>'required',
+            'stream'=>'required',
             'subject'=>'required',
             'book_name'=>'required',
             'publisher'=>'required',
-            'book_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'hsn'=>'required',
             'gst'=>'required',
             'price'=>'required',
         ]);
-        $path = $request->file('book_image')->store('public/images');
-        $product = new Product();
-        $product->school_name = $request->school_name;
-        $product->class = $request->class;
-        $product->subject = $request->subject;
-        $product->book_name = $request->book_name;
-        $product->publisher = $request->publisher;
-        $product->hsn = $request->hsn;
-        $product->gst = $request->gst;
-        $product->price = $request->price;
-        $product->book_image = $path;
-        $product->save();
-        return redirect()->route('products.index')
-        ->with('success','Product added successfully.');
+        // $path = $request->file('book_image')->store('public/images');
+        // $product = new Product();
+        // $product->school_id = $request->school_id;
+        // $product->class_id = $request->class_id;
+        // $product->subject = $request->subject;
+        // $product->book_name = $request->book_name;
+        // $product->publisher = $request->publisher;
+        // $product->hsn = $request->hsn;
+        // $product->gst = $request->gst;
+        // $product->price = $request->price;
+        // $product->book_image = $path;
+        // $product->save();
+            Product::create($request->all());
+            return redirect()->route('products.index')
+            ->with('success','Product added successfully.');
     }
 
     /**
@@ -79,7 +89,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.show',compact('product'));
+        
     }
 
     /**
@@ -88,8 +98,9 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
+        $product = Product::find($id);
         return view('products.edit',compact('product'));
     }
 
@@ -100,11 +111,11 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'school_name'=>'required',
-            'class'=>'required',
+        $this->validate($request,[
+            'school_id'=>'required',
+            'class_id'=>'required',
             'subject'=>'required',
             'book_name'=>'required',
             'publisher'=>'required',
@@ -112,16 +123,10 @@ class ProductController extends Controller
             'gst'=>'required',
             'price'=>'required',
         ]);
-        $product = new Product();
-        if($request->hasFile('book_image')){
-            $request->validate([
-              'book_image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            ]);
-            $path = $request->file('book_image')->store('public/images');
-            $product->book_image = $path;
-        }
-        $product->school_name = $request->school_name;
-        $product->class = $request->class;
+
+        $product = Product::find($id);
+        $product->school_id = $request->school_id;
+        $product->class_id = $request->class_id;
         $product->subject = $request->subject;
         $product->book_name = $request->book_name;
         $product->publisher = $request->publisher;
@@ -129,6 +134,7 @@ class ProductController extends Controller
         $product->gst = $request->gst;
         $product->price = $request->price;
         $product->save();
+        
         return redirect()->route('products.index')
         ->with('success','Product updated successfully');
     }
@@ -144,5 +150,17 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('products.index')
         ->with('success','Product deleted successfully');
+    }
+    public function books_list(Request $request)
+    {
+        $products= Product::where('school_id', $request->school_id)->get();
+        return view('products.index',compact('products'))
+        ->with('i',(request()->input('page',1) - 1)* 5);
+    }
+    public function products_list(Request $request)
+    {
+        $products= Product::where('school_id', $request->school_id)->where('class_id', $request->class_id)->get();
+        return view('products.index',compact('products'))
+        ->with('i',(request()->input('page',1) - 1)* 5);
     }
 }
