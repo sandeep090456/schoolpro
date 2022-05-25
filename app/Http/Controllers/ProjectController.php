@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Models\Specification;
-use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class ProjectController extends Controller
@@ -109,7 +107,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        $project = Project::findorFail($id);
+        $project = Project::find($id);
         $project->delete();
 
         return redirect()->route('project.index')
